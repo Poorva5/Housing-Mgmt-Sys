@@ -1,0 +1,51 @@
+FROM docker.io/python:3.12.2-slim-bookworm as python
+
+#stage 1:Build our dependency wheels
+FROM python AS python-build-stage
+
+ARG BUILD_ENVIRONMENT=local
+
+COPY ./requirements .
+
+RUN pip wheel --wheel-dir /usr/src/app/wheels -r ${BUILD_ENVIRONMENT}.txt
+
+#Stage 2: Pyhton run stage
+
+FROM python as python-run-stage
+ARG BUILD_ENVIRONMENT=local
+
+ARG APP_HOME=/app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+
+ENV PYTHONUNBUFFERED 1
+
+ENV BUILD_ENV ${BUILD_ENVIRONMENT}
+
+WORKDIR ${APP_HOME}
+
+RUN addgroup --system django && \
+  adduser --system --ingroup django django && \
+  mkdir -p ${APP_HOME}/staticfiles && \
+  chown django:django ${APP_HOME}/staticfiles && \
+  chmod 775 ${APP_HOME}/staticfiles
+
+COPY --from=python-build-stage /usr/src/app/wheels /wheels/
+
+RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
+  && rm -rf /wheels/
+
+COPY --chown=django:django ./docker/local/django/entrypoint.sh /entrypoint
+RUN sed -i 's/\r$//g' /entrypoint
+RUN chmod +x /entrypoint
+
+COPY --chown=django:django ./docker/local/django/start.sh /start
+RUN sed -i 's/\r$//g' /start
+RUN chmod +x /start
+
+COPY --chown=django:django . ${APP_HOME}
+RUN chown django:django ${APP_HOME}
+
+USER django
+ENTRYPOINT [ "/entrypoint" ]
+
