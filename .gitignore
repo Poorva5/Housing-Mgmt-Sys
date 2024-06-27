@@ -166,38 +166,40 @@ cython_debug/
 #.idea/
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 # dependencies
-!client/src/lib
-client/node_modules
-client/.pnp
-client/.pnp.js
-client/.yarn/install-state.gz
+!frontend-ams/src/lib
+frontend-ams/node_modules
+frontend-ams/.pnp
+frontend-ams/.pnp.js
+frontend-ams/.yarn/install-state.gz
 
 # testing
-client/coverage
+frontend-ams/coverage
 
 # next.js
-client/.next/
-client/out/
+frontend-ams/.next/
+frontend-ams/out/
 
 # production
-client/build
+frontend-ams/build
 
 # misc
-client/.DS_Store
-client/*.pem
+frontend-ams/.DS_Store
+frontend-ams/*.pem
 
 # debug
-client/npm-debug.log*
-client/yarn-debug.log*
-client/yarn-error.log*
+frontend-ams/npm-debug.log*
+frontend-ams/yarn-debug.log*
+frontend-ams/yarn-error.log*
 
 # local env files
-client/.env*.local
+frontend-ams/.env*.local
 
 # vercel
-client/.vercel
+frontend-ams/.vercel
 
 # typescript
-client/*.tsbuildinfo
-client/next-env.d.ts
+frontend-ams/*.tsbuildinfo
+frontend-ams/next-env.d.ts
