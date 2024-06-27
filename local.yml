@@ -54,6 +54,21 @@ services:
     networks:
       - estate_prod_nw
   
+  client:
+    build:
+      context: ./frontend-ams
+      dockerfile: ./docker/local/Dockerfile
+    container_name: estate_client
+    image: estate_client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-ams:/app
+      - /app/node_mudules
+    networks:
+      - estate_prod_nw
+
+  
 networks:
   estate_prod_nw:
     external: true
